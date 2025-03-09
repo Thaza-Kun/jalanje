@@ -4,7 +4,7 @@ import {
 	TEST_ORIGIN_COORDINATE,
 } from "$env/static/private";
 
-import {Coord as CoordInterface} from "./+page.svelte";
+import { Coord as CoordInterface } from "./+page.svelte";
 
 class Coord implements CoordInterface {
 	location: { latLng: { latitude: number; longitude: number } };
@@ -27,8 +27,8 @@ export const load = async ({ fetch, cookies }) => {
 				Date.UTC(
 					today.getUTCFullYear(),
 					today.getUTCMonth(),
-          // TODO: Find a way to get past timestamp
-          // Can only get future timestamp 
+					// TODO: Find a way to get past timestamp
+					// Can only get future timestamp
 					today.getUTCDate() + 1,
 					hr,
 				),
