@@ -21,12 +21,12 @@ class Coord implements CoordInterface {
 
 export const load = async ({ fetch, cookies }) => {
   const today: Date = new Date();
-  const times: Array<Date> = [...Array(24).keys()].map(
+  const times: Array<Date> = [...Array(24 * 2).keys()].map(
     (hr) =>
       new Date(
         // TODO: Find a way to get past timestamp
         // Can only get future timestamp
-        today.getTime() + hr * 60 * 60 * 1000 + 60,
+        today.getTime() + 0.5 * hr * 60 * 60 * 1000 + 60,
       ),
   );
   const coord_origin: Coord = new Coord(
