@@ -44,8 +44,7 @@ export const load = async ({ fetch, cookies }) => {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": GOOGLE_MAP_API_KEY,
-        "X-Goog-FieldMask":
-          "routes.duration,routes.staticDuration,routes.distanceMeters",
+        "X-Goog-FieldMask": "routes.duration,routes.distanceMeters",
         // TO INSPECT ALL FIELDS, USE *
         // 'X-Goog-FieldMask': '*'
       },
