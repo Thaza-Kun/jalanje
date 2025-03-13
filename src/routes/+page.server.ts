@@ -4,7 +4,7 @@ import {
   TEST_ORIGIN_COORDINATE,
 } from "$env/static/private";
 
-import { Coord as CoordInterface } from "./+page.svelte";
+import type { Coord as CoordInterface } from "./types.ts";
 
 class Coord implements CoordInterface {
   location: { latLng: { latitude: number; longitude: number } };

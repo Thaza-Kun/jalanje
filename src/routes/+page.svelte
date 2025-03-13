@@ -1,59 +1,65 @@
 <script lang="ts">
-import Counter from "./Counter.svelte";
-import welcome from "$lib/images/svelte-welcome.webp";
-import welcomeFallback from "$lib/images/svelte-welcome.png";
+    import {
+        Chart,
+        type ChartData,
+        type ChartItem,
+        type ChartOptions,
+    } from "chart.js/auto";
+    import "chartjs-adapter-moment";
+    import { onMount } from "svelte";
+    import type { Props, RouteResponseProp, DistanceProp } from "./types.ts";
+    import { toChartData } from "./charts.ts";
+
+    let response: Props<RouteResponseProp> = $props();
+
+    onMount(() => {
+        let timeline: Props<DistanceProp<number | null>> = {
+            data: {
+                ...response.data,
+                routes: response.data.routes.map((a) =>
+                    a.routes
+                        ? {
+                              distance: a.routes[0].distanceMeters,
+                              duration: Number(
+                                  a.routes[0].duration.replace("s", ""),
+                              ),
+                          }
+                        : { distance: null, duration: null },
+                ),
+            },
+        };
+        const ctx = document.getElementById("lineChart");
+        const chartData: ChartData = toChartData(timeline);
+        const chartOptions: ChartOptions = {
+            scales: {
+                yax: {
+                    title: {
+                        display: true,
+                        text: "Tempoh perjalanan (min)",
+                    },
+                },
+                xax: {
+                    type: "time",
+                    title: {
+                        display: true,
+                        text: "Masa bertolak (jam)",
+                    },
+                },
+            },
+        };
+        let c = new Chart(ctx as ChartItem, {
+            type: "line",
+            data: chartData,
+            options: chartOptions,
+        });
+    });
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+    <title>Map</title>
 </svelte:head>
 
+<!-- TODO: CSS styling -->
 <section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcomeFallback} alt="Welcome" />
-			</picture>
-		</span>
-
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
+    <canvas id="lineChart"></canvas>
 </section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
-</style>

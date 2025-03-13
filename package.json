@@ -24,6 +24,8 @@
   },
   "dependencies": {
     "@sveltejs/adapter-static": "^3.0.8",
-    "chart.js": "^4.4.8"
+    "chart.js": "^4.4.8",
+    "chartjs-adapter-moment": "^1.0.1",
+    "moment": "^2.30.1"
   }
 }
