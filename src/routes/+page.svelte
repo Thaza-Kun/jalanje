@@ -16,64 +16,75 @@
     import { toChartData } from "./charts.ts";
 
     interface ResponseProp {
-        data?: List;
-        error?: {
+        data: Data;
+        // error?: {
+        //     code: number;
+        //     message: string;
+        //     status: string;
+        // };
+    }
+    interface Route {
+        routes: DistanceResponseProp[];
+    }
+
+    interface Error {
+        error: {
             code: number;
             message: string;
             status: string;
         };
     }
-    interface Route {
-        routes: DistanceResponseProp[];
-    }
-    interface List {
-        paths: Props<Route>[];
+    interface Data {
+        paths: Props<Route | Error>[];
     }
     let response: ResponseProp = $props();
 
     onMount(() => {
-        if (response.data != null) {
-            console.log(response.data);
-            let timeline: Props<DistanceProp<number>>[] =
-                response.data.paths.map((p) => {
-                    return {
-                        ...p,
-                        routes: p.routes.map((a) => {
+        let timeline: Props<DistanceProp<number | null>>[] =
+            response.data.paths.map((p) => {
+                return {
+                    ...p,
+                    routes: p.routes.map((a) => {
+                        if ("routes" in a) {
                             return {
                                 distance: a.routes[0].distanceMeters,
                                 duration: Number(
                                     a.routes[0].duration.replace("s", ""),
                                 ),
                             };
-                        }),
-                    };
-                });
-            console.log(timeline);
-            const ctx_line = document.getElementById("lineChart");
-            const chartData: ChartData = toChartData(timeline);
-            const chartOptions: ChartOptions = {
-                scales: {
-                    yax: {
-                        title: {
-                            display: true,
-                            text: "Tempoh perjalanan (jam)",
-                        },
-                    },
-                    xax: {
-                        type: "time",
-                        title: {
-                            display: true,
-                            text: "Masa bertolak",
-                        },
+                        } else {
+                            return {
+                                distance: null,
+                                duration: null,
+                            };
+                        }
+                    }),
+                };
+            });
+        const ctx_line = document.getElementById("lineChart");
+        const chartData: ChartData = toChartData(timeline);
+        const chartOptions: ChartOptions = {
+            scales: {
+                yax: {
+                    title: {
+                        display: true,
+                        text: "Perbezaan tempoh perjalanan (jam)",
                     },
                 },
-            };
-            let c = new Chart(ctx_line as ChartItem, {
-                type: "line",
-                data: chartData,
-                options: chartOptions,
-            });
-        }
+                xax: {
+                    type: "time",
+                    title: {
+                        display: true,
+                        text: "Masa bertolak",
+                    },
+                },
+            },
+        };
+        let c = new Chart(ctx_line as ChartItem, {
+            type: "line",
+            data: chartData,
+            options: chartOptions,
+        });
     });
 </script>
 

@@ -34,13 +34,9 @@ class NamedCoord implements NamedCoordInterface {
 
 export const load = async ({ fetch, cookies }) => {
   const today: Date = new Date();
-  const times: Array<Date> = [...Array(24 * 2).keys()].map(
-    (hr) =>
-      new Date(
-        // TODO: Find a way to get past timestamp
-        // Can only get future timestamp
-        today.getTime() + 0.5 * hr * 60 * 60 * 1000 + 60,
-      ),
+  const times: Array<Date> = [...Array(24).keys()].map(
+    // + 30_000 => offset time to 30 seconds from request
+    (hr) => new Date(today.getTime() + 1 * hr * 60 * 60 * 1000 + 30_000),
   );
   const coord_KLCC_KL: NamedCoord = new NamedCoord(
     "KLCC, KL",
@@ -113,6 +109,12 @@ export const load = async ({ fetch, cookies }) => {
   const pairs = [
     [coord_Kangar_Perlis, coord_KLCC_KL],
     [coord_JohorBahru_Johor, coord_KLCC_KL],
+    [coord_KotaBahru_Kelantan, coord_KLCC_KL],
+    [coord_Ipoh_Perak, coord_KLCC_KL],
+    [coord_Seremban_NS, coord_KLCC_KL],
+    [coord_Melaka_Melaka, coord_KLCC_KL],
+    [coord_Kuantan_Pahang, coord_KLCC_KL],
+    [coord_AlorSetar_Kedah, coord_KLCC_KL],
   ];
   const getData = async (origin: Coord, destination: Coord) => {
     const res = await Promise.all(
